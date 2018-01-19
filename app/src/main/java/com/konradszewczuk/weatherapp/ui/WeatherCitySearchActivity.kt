@@ -75,8 +75,10 @@ class WeatherCitySearchActivity : AppCompatActivity() {
     }
 
     private fun setupWeatherDetailsObserver(searchedCityName: String): Disposable? {
-        return viewModel.getWeather(searchedCityName)?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe(
+        return viewModel.getWeather(searchedCityName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
                         { weatherResponse: WeatherDetailsDTO? ->
                             resolveRequestEndUI()
                             navigateToDetailsActivity(weatherResponse)
@@ -155,8 +157,8 @@ class WeatherCitySearchActivity : AppCompatActivity() {
                 )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         compositeDisposable.clear()
     }
 }
